@@ -35,4 +35,19 @@ module.exports = {
       });
     }),
 
+  updateImage: (data, id) =>
+    new Promise((resolve, reject) => {
+      const { avatar, updatedAt } = data;
+      pool.query(`UPDATE users SET avatar = $1, updated_at = $2 where id = $3`, [avatar, updatedAt, id], (err, result) => {
+        if(!err) {
+          const updateDate = {
+            id,
+            ...data
+          }
+          resolve(updateDate)
+        } else {
+          reject(err)
+        }
+      });
+    }),
 };

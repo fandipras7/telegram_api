@@ -1,7 +1,9 @@
 const createError = require("http-errors");
 const errMessage = createError.InternalServerError();
 const commonHelper = require("../helper/common");
+const deleteFile = require("../helper/deleteFile");
 const { detailChat } = require("../model/chat");
+const user = require("../model/user");
 const userModel = require("../model/user");
 
 const list = async (req, res, next) => {
@@ -57,23 +59,23 @@ const detailUser = async (req, res, next) => {
 };
 
 const profile = async (req, res, next) => {
-    try {
-      const id = req.user.id;
+  try {
+    const id = req.user.id;
     //   console.log('apakah ini jalan');
-      const { rows: result } = await userModel.findBy("id", id);
-      if (!result) {
-        next(createError("Data Not Found"));
-      }
-      const data = result[0];
-  
-      // console.log(data);
-      delete data.password;
-      commonHelper.response(res, data, 200, "get detail profile");
-    } catch (error) {
-      console.log(error);
-      next(createError("Internal Server Error"));
+    const { rows: result } = await userModel.findBy("id", id);
+    if (!result) {
+      next(createError("Data Not Found"));
     }
-  };
+    const data = result[0];
+
+    // console.log(data);
+    delete data.password;
+    commonHelper.response(res, data, 200, "get detail profile");
+  } catch (error) {
+    console.log(error);
+    next(createError("Internal Server Error"));
+  }
+};
 
 const updateUser = async (req, res, next) => {
   try {
@@ -98,6 +100,39 @@ const updateUser = async (req, res, next) => {
   }
 };
 
+const updateImage = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const user = await userModel.findBy("id", id);
 
+    if (!user.rowCount) {
+      if (req.file) {
+        deleteFile(`http://${req.get("host")}/img/${req.file.filename}`);
+      }
+      next(createError(`User with id ${id} not found`));
+    }
 
-module.exports = { list, detailUser, profile, updateUser };
+    let { avatar } = user.rows[0];
+    if (req.file) {
+      if (avatar !== "default.png") {
+        deleteFile(`http://${req.get("host")}/img/${avatar}`);
+      }
+      avatar = req.file.filename;
+    }
+
+    const data = {
+      avatar,
+      updatedAt: new Date(Date.now()),
+    };
+
+    const result = await userModel.updateImage(data, id);
+
+    commonHelper.response(res, result, 200, "update imgae success");
+  } catch (error) {
+    deleteFile(`http://${req.get("host")}/img/${req.file.filename}`);
+    console.log(error);
+    next(createError("Internal Server Error"));
+  }
+};
+
+module.exports = { list, detailUser, profile, updateUser, updateImage };
