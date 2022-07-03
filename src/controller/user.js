@@ -41,20 +41,63 @@ const list = async (req, res, next) => {
 const detailUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const {rows: result} = await userModel.findBy("id", id);
-    const data = result[0]
-
-    if (!data) {
+    const { rows: result } = await userModel.findBy("id", id);
+    if (!result) {
       next(createError("Data Not Found"));
     }
+    const data = result[0];
+
     // console.log(data);
-    delete data.password
+    delete data.password;
     commonHelper.response(res, data, 200, "get detail users");
   } catch (error) {
     console.log(error);
     next(createError("Internal Server Error"));
-  
   }
 };
 
-module.exports = { list, detailUser };
+const profile = async (req, res, next) => {
+    try {
+      const id = req.user.id;
+    //   console.log('apakah ini jalan');
+      const { rows: result } = await userModel.findBy("id", id);
+      if (!result) {
+        next(createError("Data Not Found"));
+      }
+      const data = result[0];
+  
+      // console.log(data);
+      delete data.password;
+      commonHelper.response(res, data, 200, "get detail profile");
+    } catch (error) {
+      console.log(error);
+      next(createError("Internal Server Error"));
+    }
+  };
+
+const updateUser = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const user = await userModel.findBy("id", id);
+
+    if (!user.rowCount) {
+      next(createError("Data Not Found"));
+    }
+
+    const data = {
+      ...req.body,
+      updatedAt: new Date(Date.now()),
+    };
+
+    const result = await userModel.updateUser(data);
+
+    commonHelper.response(res, data, 200, "get detail users");
+  } catch (error) {
+    console.log(error);
+    next(createError("Internal Server Error"));
+  }
+};
+
+
+
+module.exports = { list, detailUser, profile, updateUser };

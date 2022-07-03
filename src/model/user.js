@@ -22,4 +22,17 @@ module.exports = {
         }
       });
     }),
+
+  updateUser: (data) =>
+    new Promise((resolve, reject) => {
+      const { name, username, phone, bio, updatedAt } = data;
+      pool.query(`UPDATE users SET name = $1, username = $2, phone = $3, bio = $4, updated_at = $5`, [name, username, phone, bio, updatedAt], (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(err);
+        }
+      });
+    }),
+
 };
