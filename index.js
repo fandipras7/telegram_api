@@ -8,6 +8,7 @@ const morgan = require('morgan')
 const path = require('path')
 const xss = require('xss-clean')
 const mainRoute = require('./src/routes/index')
+const listenSocket = require('./src/socket/index')
 
 
 const app = express();
@@ -46,6 +47,11 @@ const io = new Server(httpServer, {
     origin: "http://localhost:3000",
   },
 });
+
+io.on('connection', (socket)=>{
+  console.log('Client Connected');
+  listenSocket(io, socket)
+})
 
 app.use((err, req, res, next) => {
     let messError = err.message || 'Internal Server Error'
