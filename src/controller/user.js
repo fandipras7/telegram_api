@@ -2,12 +2,13 @@ const createError = require("http-errors");
 const errMessage = createError.InternalServerError();
 const commonHelper = require("../helper/common");
 const deleteFile = require("../helper/deleteFile");
-const { detailChat } = require("../model/chat");
+const { detailChat, listChat } = require("../model/chat");
 const user = require("../model/user");
 const userModel = require("../model/user");
 
 const list = async (req, res, next) => {
   try {
+    console.log("apakah get list jalan");
     const id = req.user.id;
     let { search, limit } = req.query;
 
@@ -17,7 +18,8 @@ const list = async (req, res, next) => {
     const result = await userModel.list(search, limit);
 
     if (!result.rowCount) {
-      next(createError("Data Not Found"));
+      // console.log("apakah ini jalan");
+      return next(createError("Data Not Found"));
     }
 
     const data = await Promise.all(
@@ -29,9 +31,11 @@ const list = async (req, res, next) => {
           message: chat.rows,
         };
 
-        return listChat;
+        return { ...listChat };
       })
     );
+    // console.log(data[0].user);
+    console.log("apakah get list jalan");
 
     commonHelper.response(res, data, 200, "Success get all user data");
   } catch (error) {
