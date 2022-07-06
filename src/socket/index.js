@@ -1,28 +1,27 @@
+const moment = require("moment");
+
 const { v4: uuidv4 } = require("uuid");
 const { insertChat, listChat, deleteChat } = require("../model/chat");
 
 const listenSocket = (io, socket) => {
-  // const id = socket.data.iduser
-  // const data = `halo`;
-  // socket.on("ping", (data) => {
-  //   io.to("3e832e71-5fea-420c-a6bb-c2a961069c9e").emit("ping-response", data.message);
+  // socket.on("join-room", (data) => {
+  //   // console.log(data.id + " selamat join dengan diri sendiri");
+  //   socket.join(data.id);
   // });
-  socket.on("join-room", (data) => {
-    // console.log(data.id + " selamat join dengan diri sendiri");
-    socket.join(data.id);
-  });
   socket.on("send-message", async (data) => {
-    const { sender, receiver, type, message } = data;
+    const { sender, receiver, type, chat } = data;
     const setData = {
       id: uuidv4(),
       sender,
       receiver,
-      type,
-      message,
+      type: type || 0,
+      chat,
       isRead: 1,
+      created_at: moment(new Date()).format("LT"),
     };
     insertChat(setData)
       .then(async () => {
+        console.log(receiver);
         const listChats = await listChat(sender, receiver);
         io.to(receiver).emit("send-message-response", listChats.rows);
       })
@@ -35,7 +34,7 @@ const listenSocket = (io, socket) => {
     const listChats = await listChat(sender, receiver);
     io.to(sender).emit("send-message-response", listChats.rows);
   });
-  socket.on("delete-message", (id, sender, receiver) => {
+  socket.on("delete-message", ({ id, sender, receiver }) => {
     deleteChat(id)
       .then(async () => {
         const listChats = await listChat(sender, message);

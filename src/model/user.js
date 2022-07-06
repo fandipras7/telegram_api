@@ -25,8 +25,8 @@ module.exports = {
 
   updateUser: (data) =>
     new Promise((resolve, reject) => {
-      const { name, username, phone, bio, updatedAt } = data;
-      pool.query(`UPDATE users SET name = $1, username = $2, phone = $3, bio = $4, updated_at = $5`, [name, username, phone, bio, updatedAt], (err, result) => {
+      const { name, username, phone, bio, updatedAt, id } = data;
+      pool.query(`UPDATE users SET name = $1, username = $2, phone = $3, bio = $4, updated_at = $5 WHERE id = $6`, [name, username, phone, bio, updatedAt, id], (err, result) => {
         if (!err) {
           resolve(result);
         } else {
@@ -39,14 +39,14 @@ module.exports = {
     new Promise((resolve, reject) => {
       const { avatar, updatedAt } = data;
       pool.query(`UPDATE users SET avatar = $1, updated_at = $2 where id = $3`, [avatar, updatedAt, id], (err, result) => {
-        if(!err) {
+        if (!err) {
           const updateDate = {
             id,
-            ...data
-          }
-          resolve(updateDate)
+            ...data,
+          };
+          resolve(updateDate);
         } else {
-          reject(err)
+          reject(err);
         }
       });
     }),

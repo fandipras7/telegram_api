@@ -8,7 +8,7 @@ const userModel = require("../model/user");
 
 const list = async (req, res, next) => {
   try {
-    console.log("apakah get list jalan");
+    // console.log("apakah get list jalan");
     const id = req.user.id;
     let { search, limit } = req.query;
 
@@ -35,7 +35,7 @@ const list = async (req, res, next) => {
       })
     );
     // console.log(data[0].user);
-    console.log("apakah get list jalan");
+    // console.log("apakah get list jalan");
 
     commonHelper.response(res, data, 200, "Success get all user data");
   } catch (error) {
@@ -93,11 +93,12 @@ const updateUser = async (req, res, next) => {
     const data = {
       ...req.body,
       updatedAt: new Date(Date.now()),
+      id: id,
     };
 
     const result = await userModel.updateUser(data);
 
-    commonHelper.response(res, data, 200, "get detail users");
+    commonHelper.response(res, data, 200, "Your data has been updated");
   } catch (error) {
     console.log(error);
     next(createError("Internal Server Error"));
@@ -121,7 +122,8 @@ const updateImage = async (req, res, next) => {
       if (avatar !== "default.png") {
         deleteFile(`http://${req.get("host")}/img/${avatar}`);
       }
-      avatar = req.file.filename;
+      // avatar = req.file.filename;
+      avatar = `http://${req.get("host")}/img/${req.file.filename}`;
     }
 
     const data = {

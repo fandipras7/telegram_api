@@ -30,9 +30,9 @@ module.exports = {
       });
     }),
 
-  insertChat: (id, sender, receiver, type, message, isRead) =>
+  insertChat: ({ id, sender, receiver, type, chat, isRead, created_at }) =>
     new Promise((resolve, reject) => {
-      pool.query(`INSERT INTO chats VALUES ($1, $2, $3, $4, $5, $6)`, [id, sender, receiver, type, message, isRead], (err, result) => {
+      pool.query(`INSERT INTO chats VALUES ($1, $2, $3, $4, $5, $6, $7)`, [id, sender, receiver, type, chat, isRead, created_at], (err, result) => {
         if (!err) {
           resolve(result);
         } else {
