@@ -1,6 +1,7 @@
 CREATE TABLE users (
     id character varying(255) NOT NULL,
     username character varying(255),
+    name character varying(255) NOT NULL,
     email character varying(100) NOT NULL,
     password character varying(255) NOT NULL,
     phone character varying(15),
