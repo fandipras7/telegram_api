@@ -19,6 +19,7 @@ const listenSocket = (io, socket) => {
       isRead: 1,
       created_at: moment(new Date()).format("LT"),
     };
+    console.log('apakah ini jalan');
     insertChat(setData)
       .then(async () => {
         console.log(receiver);
