@@ -9,7 +9,7 @@ const listenSocket = (io, socket) => {
   //   socket.join(data.id);
   // });
   socket.on("send-message", async (data) => {
-    const { sender, receiver, type, chat } = data;
+    const { sender, receiver, type, chat, created_at } = data;
     const setData = {
       id: uuidv4(),
       sender,
@@ -17,9 +17,9 @@ const listenSocket = (io, socket) => {
       type: type || 0,
       chat,
       isRead: 1,
-      created_at: moment(new Date()).format("LT"),
+      created_at: created_at || moment(new Date()).format("LT"),
     };
-    console.log('apakah ini jalan');
+    console.log("apakah ini jalan");
     insertChat(setData)
       .then(async () => {
         console.log(receiver);
