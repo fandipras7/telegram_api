@@ -9,7 +9,7 @@ const listenSocket = (io, socket) => {
   //   socket.join(data.id);
   // });
   socket.on("send-message", async (data) => {
-    const { sender, receiver, type, chat, created_at } = data;
+    const { sender, receiver, type, chat } = data;
     const setData = {
       id: uuidv4(),
       sender,
@@ -17,12 +17,16 @@ const listenSocket = (io, socket) => {
       type: type || 0,
       chat,
       isRead: 1,
-      created_at: created_at || moment(new Date()).format("LT"),
+      created_at: moment(new Date()).format("LT"),
+      // created_at: new Date(),
     };
-    console.log("apakah ini jalan");
+    // console.log("apakah ini jalan");
+    // console.log(sender);
+    // console.log(receiver);
     insertChat(setData)
       .then(async () => {
-        console.log(receiver);
+        // console.log(receiver);
+        // console.log(sender);
         const listChats = await listChat(sender, receiver);
         io.to(receiver).emit("send-message-response", listChats.rows);
       })
@@ -36,11 +40,15 @@ const listenSocket = (io, socket) => {
     io.to(sender).emit("send-message-response", listChats.rows);
   });
   socket.on("delete-message", ({ id, sender, receiver }) => {
+    console.log("cek apakah delete jalan");
+    // console.log(receiver);
+    // console.log(sender);
     deleteChat(id)
       .then(async () => {
         const listChats = await listChat(sender, receiver);
-        io.to(sender).emit("send-mesage-response", listChats.rows);
+        // io.to(sender).emit("send-mesage-response", listChats.rows);
         io.to(receiver).emit("send-message-response", listChats.rows);
+        console.log("apakah delete sukses");
       })
       .catch((err) => {
         console.log(err.message);

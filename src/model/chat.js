@@ -20,7 +20,7 @@ module.exports = {
 
   findBy: (field, search) =>
     new Promise((resolve, reject) => {
-      console.log(search);
+      // console.log(search);
       pool.query(`SELECT * FROM chats WHERE ${field} = $1`, [search], (err, result) => {
         if (!err) {
           resolve(result);
@@ -43,7 +43,7 @@ module.exports = {
 
   listChat: (sender, receiver) =>
     new Promise((resolve, reject) => {
-      console.log("sek query");
+      // console.log("sek query");
       pool.query(
         `SELECT chats.id, userSender.id AS sender_id, userReceiver.id AS receiver_id,
       userSender.name AS sender, userReceiver.name AS receiver, chats.chat,
