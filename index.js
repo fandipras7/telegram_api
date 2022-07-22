@@ -44,7 +44,7 @@ app.all("*", (req, res, next) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://master--precious-pika-9e595f.netlify.app"],
   },
 });
 
