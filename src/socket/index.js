@@ -38,7 +38,7 @@ const listenSocket = (io, socket) => {
   socket.on("delete-message", ({ id, sender, receiver }) => {
     deleteChat(id)
       .then(async () => {
-        const listChats = await listChat(sender, message);
+        const listChats = await listChat(sender, receiver);
         io.to(sender).emit("send-mesage-response", listChats.rows);
         io.to(receiver).emit("send-message-response", listChats.rows);
       })
