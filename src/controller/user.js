@@ -7,10 +7,16 @@ const user = require("../model/user");
 const userModel = require("../model/user");
 const cloudinary = require("cloudinary").v2;
 
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+// });
+
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: "dbpfwb5ok",
+  api_key: "117781545328253",
+  api_secret: "1nAdMge0mf1KjuDwJi8CWPWpHx8",
 });
 
 const list = async (req, res, next) => {
@@ -64,6 +70,7 @@ const detailUser = async (req, res, next) => {
     delete data.password;
     commonHelper.response(res, data, 200, "get detail users");
   } catch (error) {
+    console.log("cek");
     console.log(error);
     next(createError("Internal Server Error"));
   }
