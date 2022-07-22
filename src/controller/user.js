@@ -5,6 +5,13 @@ const deleteFile = require("../helper/deleteFile");
 const { detailChat, listChat } = require("../model/chat");
 const user = require("../model/user");
 const userModel = require("../model/user");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 const list = async (req, res, next) => {
   try {
@@ -108,26 +115,32 @@ const updateUser = async (req, res, next) => {
 const updateImage = async (req, res, next) => {
   try {
     const id = req.user.id;
-    const user = await userModel.findBy("id", id);
+    // const user = await userModel.findBy("id", id);
 
-    if (!user.rowCount) {
-      if (req.file) {
-        deleteFile(`http://${req.get("host")}/img/${req.file.filename}`);
-      }
-      next(createError(`User with id ${id} not found`));
-    }
+    // if (!user.rowCount) {
+    //   if (req.file) {
+    //     deleteFile(`http://${req.get("host")}/img/${req.file.filename}`);
+    //   }
+    //   next(createError(`User with id ${id} not found`));
+    // }
 
-    let { avatar } = user.rows[0];
-    if (req.file) {
-      if (avatar !== "default.png") {
-        deleteFile(`http://${req.get("host")}/img/${avatar}`);
-      }
-      // avatar = req.file.filename;
-      avatar = `http://${req.get("host")}/img/${req.file.filename}`;
-    }
+    // let { avatar } = user.rows[0];
+    // if (req.file) {
+    //   if (avatar !== "default.png") {
+    //     deleteFile(`http://${req.get("host")}/img/${avatar}`);
+    //   }
+    //   // avatar = req.file.filename;
+    //   avatar = `http://${req.get("host")}/img/${req.file.filename}`;
+    // }
+
+    const avaFile = req.file;
+    // console.log(req.file);
+    const avatar = await cloudinary.uploader.upload(avaFile.path, { folder: "telegram/avatar" });
+
+    console.log(avatar);
 
     const data = {
-      avatar,
+      avatar: avatar.secure_url,
       updatedAt: new Date(Date.now()),
     };
 
@@ -135,7 +148,7 @@ const updateImage = async (req, res, next) => {
 
     commonHelper.response(res, result, 200, "update imgae success");
   } catch (error) {
-    deleteFile(`http://${req.get("host")}/img/${req.file.filename}`);
+    // deleteFile(`http://${req.get("host")}/img/${req.file.filename}`);
     console.log(error);
     next(createError("Internal Server Error"));
   }
