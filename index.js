@@ -13,6 +13,7 @@ const listenSocket = require("./src/socket/index");
 
 const app = express();
 const http = require("http");
+const { updateOnlineStatus } = require("./src/model/user");
 const httpServer = http.createServer(app);
 
 const PORT = process.env.PORT || 5000;
@@ -64,6 +65,12 @@ io.use((socket, next) => {
     }
     socket.userId = decoded.id;
     socket.join(decoded.id);
+    const data = {
+      isOnline: 1,
+      id: decoded.id,
+      updatedAt: new Date(Date.now()),
+    };
+    updateOnlineStatus(data);
     next();
   });
 });

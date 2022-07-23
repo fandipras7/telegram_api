@@ -2,6 +2,7 @@ const moment = require("moment");
 
 const { v4: uuidv4 } = require("uuid");
 const { insertChat, listChat, deleteChat } = require("../model/chat");
+const { updateOnlineStatus } = require("../model/user");
 
 const listenSocket = (io, socket) => {
   // socket.on("join-room", (data) => {
@@ -27,6 +28,7 @@ const listenSocket = (io, socket) => {
       .then(async () => {
         // console.log(receiver);
         // console.log(sender);
+        // const notif = 1;
         const listChats = await listChat(sender, receiver);
         io.to(receiver).emit("send-message-response", listChats.rows);
       })
@@ -39,13 +41,15 @@ const listenSocket = (io, socket) => {
     const listChats = await listChat(sender, receiver);
     io.to(sender).emit("send-message-response", listChats.rows);
   });
-  socket.on("delete-message", ({ id, sender, receiver }) => {
+  socket.on("delete-message", async ({ id, sender, receiver }) => {
     console.log("cek apakah delete jalan");
-    // console.log(receiver);
-    // console.log(sender);
+    console.log(sender);
+    console.log(receiver);
     deleteChat(id)
       .then(async () => {
         const listChats = await listChat(sender, receiver);
+        console.log(sender);
+        console.log(receiver);
         // io.to(sender).emit("send-mesage-response", listChats.rows);
         io.to(receiver).emit("send-message-response", listChats.rows);
         console.log("apakah delete sukses");
@@ -53,6 +57,16 @@ const listenSocket = (io, socket) => {
       .catch((err) => {
         console.log(err.message);
       });
+  });
+  socket.on("force-disconnect", async (data) => {
+    try {
+      await updateOnlineStatus(data);
+      socket.disconnect();
+      console.log(`ada perangkat yg terputus dengan id ${socket.id}`);
+      // userModel.deleteUserbyId()
+    } catch (error) {
+      console.log(error.message);
+    }
   });
 };
 

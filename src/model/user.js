@@ -35,6 +35,19 @@ module.exports = {
       });
     }),
 
+  updateOnlineStatus: (data) =>
+    new Promise((resolve, reject) => {
+      const { isOnline, updatedAt, id } = data;
+      // console.log(updatedAt);
+      pool.query(`UPDATE users SET is_online = ${isOnline}, updated_at = $1 WHERE id = '${id}'`, [updatedAt], (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject(err);
+        }
+      });
+    }),
+
   updateImage: (data, id) =>
     new Promise((resolve, reject) => {
       const { avatar, updatedAt } = data;
