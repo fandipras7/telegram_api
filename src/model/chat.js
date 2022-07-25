@@ -30,9 +30,9 @@ module.exports = {
       });
     }),
 
-  insertChat: ({ id, sender, receiver, type, chat, isRead, created_at }) =>
+  insertChat: ({ id, sender, receiver, type, chat, isRead }) =>
     new Promise((resolve, reject) => {
-      pool.query(`INSERT INTO chats VALUES ($1, $2, $3, $4, $5, $6, $7)`, [id, sender, receiver, type, chat, isRead, created_at], (err, result) => {
+      pool.query(`INSERT INTO chats VALUES ($1, $2, $3, $4, $5, $6)`, [id, sender, receiver, type, chat, isRead], (err, result) => {
         if (!err) {
           resolve(result);
         } else {
@@ -52,7 +52,7 @@ module.exports = {
       LEFT JOIN users AS userSender ON chats.sender = userSender.id
       LEFT JOIN users AS userReceiver ON chats.receiver = userReceiver.id
       WHERE (sender = '${sender}' AND receiver='${receiver}')
-      OR (sender='${receiver}' AND receiver='${sender}') ORDER BY chats.created_at ASC
+      OR (sender='${receiver}' AND receiver='${sender}')
       `,
         (err, result) => {
           if (!err) {
