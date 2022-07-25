@@ -7,7 +7,7 @@ module.exports = {
     new Promise((resolve, reject) => {
       pool.query(
         `SELECT * FROM chats WHERE (sender='${sender}' AND receiver='${receiver}') 
-        OR (sender='${receiver}' AND receiver='${sender}') ORDER BY created_at ASC LIMIT 1`,
+        OR (sender='${receiver}' AND receiver='${sender}') ORDER BY created_at DESC LIMIT 1`,
         (err, result) => {
           if (!err) {
             resolve(result);
