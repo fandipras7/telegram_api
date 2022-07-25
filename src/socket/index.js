@@ -18,7 +18,7 @@ const listenSocket = (io, socket) => {
       type: type || 0,
       chat,
       isRead: 1,
-      // created_at: ,
+      created_at: moment(new Date()).format("LT"),
       // created_at: new Date(),
     };
     console.log(data);
