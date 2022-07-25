@@ -52,7 +52,7 @@ module.exports = {
       LEFT JOIN users AS userSender ON chats.sender = userSender.id
       LEFT JOIN users AS userReceiver ON chats.receiver = userReceiver.id
       WHERE (sender = '${sender}' AND receiver='${receiver}')
-      OR (sender='${receiver}' AND receiver='${sender}')
+      OR (sender='${receiver}' AND receiver='${sender}') ORDER BY chats.created_at ASC
       `,
         (err, result) => {
           if (!err) {
