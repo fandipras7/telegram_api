@@ -21,6 +21,7 @@ const listenSocket = (io, socket) => {
       created_at: moment(new Date()).format("LT"),
       // created_at: new Date(),
     };
+    console.log(data);
     // console.log("apakah ini jalan");
     // console.log(sender);
     // console.log(receiver);
