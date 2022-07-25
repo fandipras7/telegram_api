@@ -37,16 +37,17 @@ const createError = require("http-errors");
 
 const multerUpload = multer({
   storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "./upload");
-    },
-    filename: (req, file, cb) => {
-      const extension = path.extname(file.originalname);
-      const filename = `${Date.now()}${extension}`;
-      cb(null, filename);
-    },
+    // destination: (req, file, cb) => {
+    //   cb(null, "./upload");
+    // },
+    // filename: (req, file, cb) => {
+    //   const extension = path.extname(file.originalname);
+    //   const filename = `${Date.now()}${extension}`;
+    //   cb(null, filename);
+    // },
   }),
   fileFilter: (req, file, cb) => {
+    console.log(file);
     const extension = path.extname(file.originalname);
     const fileSize = parseInt(req.header["content-length"]);
     const maxSize = 2 * 1024 * 1024;
@@ -69,7 +70,7 @@ const multerUpload = multer({
 });
 
 const uploadAva = (req, res, next) => {
-  const multerSingle = multerUpload.array("avatar");
+  const multerSingle = multerUpload.single("avatar");
   multerSingle(req, res, (err) => {
     if (!err) {
       next();

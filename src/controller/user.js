@@ -141,7 +141,7 @@ const updateImage = async (req, res, next) => {
     // }
 
     const avaFile = req.file;
-    // console.log(req.file);
+    console.log(avaFile);
     const avatar = await cloudinary.uploader.upload(avaFile.path, { folder: "telegram/avatar" });
 
     console.log(avatar);
