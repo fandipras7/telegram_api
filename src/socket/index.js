@@ -51,7 +51,7 @@ const listenSocket = (io, socket) => {
         const listChats = await listChat(sender, receiver);
         console.log(sender);
         console.log(receiver);
-        // io.to(sender).emit("send-mesage-response", listChats.rows);
+        io.to(sender).emit("send-mesage-response", listChats.rows);
         io.to(receiver).emit("send-message-response", listChats.rows);
         console.log("apakah delete sukses");
       })
