@@ -32,6 +32,7 @@ const listenSocket = (io, socket) => {
         // const notif = 1;
         const listChats = await listChat(sender, receiver);
         io.to(receiver).emit("send-message-response", listChats.rows);
+        io.to(sender).emit("send-message-response", listChats.rows);
       })
       .catch((err) => {
         console.log(err.message);
