@@ -157,7 +157,7 @@ Contributions are what make the open source community such an amazing place to b
 
 :rocket: [`Web Service`](https://chatan-app.herokuapp.com/)
 
-:rocket: [`Demo Telegram Chatting`](https://master--precious-pika-9e595f.netlify.app/login)
+:rocket: [`Demo Telegram Chatting`](https://master--precious-pika-9e595f.netlify.app)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
