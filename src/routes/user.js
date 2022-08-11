@@ -10,6 +10,6 @@ router
  .get('/profile', protect, profile)
  .get('/:id', protect, detailUser)
  .post('/', protect, updateUser)
- .post('/profile', protect, uploadAva, updateImage)
+ .put('/profile', protect, uploadAva, updateImage)
 
  module.exports = router
