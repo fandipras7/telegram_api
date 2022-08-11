@@ -27,14 +27,14 @@ app.use(
 );
 app.use(morgan("dev"));
 
-app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: false,
-  })
-);
+// app.use(
+//   helmet({
+//     crossOriginEmbedderPolicy: false,
+//     crossOriginResourcePolicy: false,
+//   })
+// );
 
-// app.use(helmet.crossOriginResourcePolicy({policy: 'cross-origin'}))
+app.use(helmet.crossOriginResourcePolicy({policy: 'cross-origin'}))
 
 // sanitize
 app.use(xss());
